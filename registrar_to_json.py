@@ -30,6 +30,9 @@ def to_json(args):
             # Each record is <etd record key>: <dict of csv row>
             first_line = True
             for row in csv_reader:
+                # With the compact arg, skip rows without graduation dates.
+                if args.compact and row['degree status date'].strip() == '':
+                    continue
                 if first_line:
                     # First line, start a dict.
                     json_file.write('{"%s":' % row['etd record key'])
@@ -56,6 +59,9 @@ if __name__ == '__main__':
     parser.add_argument('-f', '-o', '--force', '--overwrite',
             action='store_true',
             help='Overwrite an existing output file.')
+    parser.add_argument('-c', '--compact',
+            action='store_true',
+            help='Compacts the output by only including rows with graduation dates.')
     args = parser.parse_args()
 
     args.csv_path = os.path.abspath(os.path.expanduser(args.csv_path))
