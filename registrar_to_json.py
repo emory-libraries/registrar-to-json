@@ -30,7 +30,7 @@ def to_json(args):
             # Each record is <etd record key>: <dict of csv row>
             first_line = True
             for row in csv_reader:
-                # With the compact arg, skip rows without graduation dates.
+                # If compact output is requested, skip rows without graduation dates.
                 if args.compact and row['degree status date'].strip() == '':
                     continue
                 if first_line:
@@ -54,15 +54,27 @@ if __name__ == '__main__':
             help='Path to the CSV file to reformat.')
     parser.add_argument('json_path',
             nargs='?',
-            default='registrar_data_{}.json'.format(date.today().strftime('%Y%m%d')),
-            help='Path for the JSON file to be created. Default is "registrar_data_<date>.json".')
+            help='Path for the JSON file to be created. Default is "registrar-data-<date>-compact.json".')
     parser.add_argument('-f', '-o', '--force', '--overwrite',
             action='store_true',
             help='Overwrite an existing output file.')
-    parser.add_argument('-c', '--compact',
+    output_type = parser.add_mutually_exclusive_group()
+    output_type.add_argument('-c', '--compact',
+            default=True,
             action='store_true',
-            help='Compacts the output by only including rows with graduation dates.')
+            help='Assumed by default. Compacts the output by only including rows with graduation dates.')
+    output_type.add_argument('--full',
+            action='store_false',
+            dest='compact',
+            help='Prevents output from being reduced to only rows with graduation dates')
     args = parser.parse_args()
+
+    if args.json_path is None:
+        today = date.today().strftime('%Y%m%d')
+        record_type = 'compact'
+        if not args.compact:
+            record_type = 'full'
+        args.json_path = 'registrar-data-{}-{}.json'.format(today, record_type)
 
     args.csv_path = os.path.abspath(os.path.expanduser(args.csv_path))
     args.json_path = os.path.abspath(os.path.expanduser(args.json_path))
