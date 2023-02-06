@@ -6,12 +6,12 @@ from datetime import date
 def safe(args):
     # Destination folder doesn't exist.
     if not os.path.exists(os.path.dirname(args.json_path)):
-        makedirs(os.path.dirname(json_path))
+        makedirs(os.path.dirname(args.json_path))
     # Destination path already exists, cannot overwrite.
     elif os.path.exists(args.json_path) and not args.force:
         return False
     # Source file unrealistically small.
-    return os.path.exists(args.csv_path) and os.path.getsize(args.csv_path) > 64
+    return os.path.exists(args.csv_path) and os.path.getsize(args.csv_path) > 2000000
 
 def to_json(args):
     with open(args.csv_path, 'r') as csv_file:
