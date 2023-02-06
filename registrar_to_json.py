@@ -55,11 +55,11 @@ if __name__ == '__main__':
     parser.add_argument('json_path',
             nargs='?',
             help='Path for the JSON file to be created. Default is "registrar-data-<date>-compact.json".')
-    parser.add_argument('-f', '-o', '--force', '--overwrite',
+    parser.add_argument('--force', '--overwrite', '-f', '-o',
             action='store_true',
             help='Overwrite an existing output file.')
     output_type = parser.add_mutually_exclusive_group()
-    output_type.add_argument('-c', '--compact',
+    output_type.add_argument('--compact', '-c',
             default=True,
             action='store_true',
             help='Assumed by default. Compacts the output by only including rows with graduation dates.')
