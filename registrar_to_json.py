@@ -1,4 +1,4 @@
-# Python 3
+#!/usr/bin/env python3
 import argparse, os.path, csv, json
 from os import makedirs
 from datetime import date
